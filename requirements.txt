@@ -1,0 +1,12 @@
+# Runtime dependencies. Source of truth is pyproject.toml.
+# Regenerate with:  uv pip compile pyproject.toml -o requirements.txt
+fastapi>=0.115
+uvicorn[standard]>=0.34
+pydantic>=2.13
+pydantic-settings>=2.7
+python-dotenv>=1.2
+python-multipart>=0.0.20
+openai>=3.3
+pillow>=12.3
+celery>=5.4
+redis>=5.2

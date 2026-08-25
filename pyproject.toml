@@ -1,0 +1,61 @@
+[project]
+name = "chaotic-custom-ai"
+version = "0.1.0"
+description = "Image generation, background removal and custom stylised text service on top of the OpenAI image models"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.34",
+    "pydantic>=2.13",
+    "pydantic-settings>=2.7",
+    "python-dotenv>=1.2",
+    "python-multipart>=0.0.20",
+    "openai>=3.3",
+    "pillow>=12.3",
+    "celery>=5.4",
+    "redis>=5.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.25",
+    "httpx>=0.28",
+    "ruff>=0.9",
+]
+
+[tool.uv]
+# This repo is a deployable service, not a distributable library:
+# `src` is imported directly from the project root, never installed.
+package = false
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["."]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "ASYNC"]
+
+[tool.ruff.lint.flake8-bugbear]
+# Depends/Query/File/Form in argument defaults is how FastAPI declares dependencies;
+# B008 would flag every route in the project.
+extend-immutable-calls = [
+    "fastapi.Depends",
+    "fastapi.Query",
+    "fastapi.Path",
+    "fastapi.Body",
+    "fastapi.Form",
+    "fastapi.File",
+    "fastapi.Header",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Prompt text is the payload: re-wrapping it to satisfy a line limit would edit the prompt.
+"src/prompts/*" = ["E501"]
+"scripts/*" = ["E501", "T201"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"

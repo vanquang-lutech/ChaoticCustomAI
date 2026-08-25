@@ -16,7 +16,15 @@ IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL", "gpt-image-2")
 
 client = OpenAI()
 
-asset_dir = Path("images/remove-background-assets")
+run_id = time.strftime("%Y%m%d_%H%M%S")
+asset_dir = (
+    Path("storage")
+    / time.strftime("%Y_%m")
+    / time.strftime("%Y_%m_%d")
+    / "upload"
+    / run_id
+    / "output"
+)
 asset_dir.mkdir(parents=True, exist_ok=True)
 
 
@@ -78,8 +86,7 @@ def remove_background(
     with Image.open(output_path) as image:
         if image.mode not in ("RGBA", "LA"):
             raise RuntimeError(
-                f"Output image does not contain an alpha channel. "
-                f"Image mode: {image.mode}"
+                f"Output image does not contain an alpha channel. Image mode: {image.mode}"
             )
 
         print(f"Output size: {image.size}")
@@ -94,13 +101,9 @@ def remove_background(
 
 
 if __name__ == "__main__":
+    input_path = Path("assets/samples/mascot.png")
 
-    input_path = Path("images/test_img/mascot.png")
-
-    output_filename = (
-        f"removed_background_{time.strftime('%Y%m%d_%H%M%S')}.png"
-    )
-    output_path = asset_dir / output_filename
+    output_path = asset_dir / "result.png"
 
     remove_background(
         input_path=input_path,

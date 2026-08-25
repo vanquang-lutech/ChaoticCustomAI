@@ -1,12 +1,10 @@
 import base64
-from fileinput import filename
 import os
-from pathlib import Path
 import time
-from dotenv import load_dotenv
+from pathlib import Path
 
+from dotenv import load_dotenv
 from openai import OpenAI
-from PIL import Image
 
 load_dotenv()
 
@@ -16,8 +14,17 @@ if not os.getenv("OPENAI_API_KEY"):
 IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL")
 
 client = OpenAI()
-asset_dir = Path("images/transparent-image-assets")
+run_id = time.strftime("%Y%m%d_%H%M%S")
+asset_dir = (
+    Path("storage")
+    / time.strftime("%Y_%m")
+    / time.strftime("%Y_%m_%d")
+    / "generate_image"
+    / run_id
+    / "output"
+)
 asset_dir.mkdir(parents=True, exist_ok=True)
+
 
 def build_transparent_prompt(user_request: str) -> str:
     return f"""
@@ -39,10 +46,9 @@ def build_transparent_prompt(user_request: str) -> str:
     - Return only the subject as a clean transparent PNG cutout.
     """.strip()
 
+
 if __name__ == "__main__":
     user_request = "Một chú mèo nhỏ dễ thương, cute."
-    output_filename = f"generated_transparent_image_{time.strftime('%Y%m%d_%H%M%S')}"
-
     start_time = time.time()
     result = client.images.generate(
         model=IMAGE_MODEL,
@@ -55,13 +61,9 @@ if __name__ == "__main__":
 
     image_bytes = base64.b64decode(result.data[0].b64_json)
 
-    output_path = asset_dir / f"{output_filename}.png"
+    output_path = asset_dir / "result.png"
     output_path.write_bytes(image_bytes)
 
     end_time = time.time()
     print(f"Generation time: {end_time - start_time:.2f} seconds")
     print(f"Saved to: {output_path}")
-
-
-
-

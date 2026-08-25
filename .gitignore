@@ -1,4 +1,37 @@
+# Environment
 .env
-images/*
-CustomStylisedText/*
-.venv/*
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.Python
+build/
+dist/
+
+# Virtualenv
+.venv/
+venv/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Runtime artifacts (keep the directories, ignore the contents).
+# Date folders under storage/ are created at runtime.
+logs/*
+!logs/.gitkeep
+storage/*
+!storage/.gitkeep
+

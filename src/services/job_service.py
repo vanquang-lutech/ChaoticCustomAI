@@ -35,8 +35,6 @@ class JobService:
         self._storage = storage
         self._usage = usage
 
-    # --- Persistence -------------------------------------------------------
-
     def create(self, feature: Feature, meta: dict | None = None) -> JobRecord:
         record = JobRecord(
             job_id=new_job_id(self._settings.now()),
@@ -71,8 +69,6 @@ class JobService:
                 feature.value,
             )
         return record
-
-    # --- Running -----------------------------------------------------------
 
     def execute(self, job_id: str, produce: ImageProducer) -> JobRecord:
         """Run a queued job to completion, recording whatever happened.
@@ -124,8 +120,6 @@ class JobService:
         record.result_filename = filename
         self.save(record)
         return record
-
-    # --- Reporting ---------------------------------------------------------
 
     def to_response(self, record: JobRecord) -> JobResponse:
         images = []

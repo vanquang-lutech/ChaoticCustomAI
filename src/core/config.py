@@ -1,11 +1,3 @@
-"""Application settings, loaded from the environment / ``.env``.
-
-Every field has a default except nothing at all: ``openai_api_key`` deliberately defaults to
-an empty string so that importing this module never fails. The key is only required when a
-request actually reaches the OpenAI provider, which keeps the test suite runnable without
-credentials.
-"""
-
 from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
@@ -28,6 +20,12 @@ class Settings(BaseSettings):
     openai_image_model: str = "gpt-image-2"
     image_size: str = "1024x1024"
     image_quality: str = "medium"
+    # Rewrites a customer's order note into a structured request before the image call. A text
+    # model, so the call is cheap and quick next to the image call it decides whether to make.
+    modified_request_model: str = "gpt-5-nano"
+    # Turn off to send order notes to the image model exactly as the customer wrote them, which
+    # is what makes the two paths comparable on real orders.
+    normalize_order_notes: bool = True
 
     # --- Application ---
     app_name: str = "ChaoticCustomAI"

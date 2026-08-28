@@ -43,8 +43,6 @@ class StorageService:
     def root(self) -> Path:
         return self._root
 
-    # --- Path construction -------------------------------------------------
-
     def day_dir(self, day: date) -> Path:
         return self._root / day.strftime(MONTH_DIR_FORMAT) / day.strftime(DAY_DIR_FORMAT)
 
@@ -73,8 +71,6 @@ class StorageService:
                 return feature, candidate
         raise JobNotFoundError("Unknown job: " + job_id)
 
-    # --- Writing -----------------------------------------------------------
-
     def save_input_bytes(self, feature: Feature, job_id: str, filename: str, data: bytes) -> Path:
         path = self.job_dir(feature, job_id, create=True) / StorageKind.INPUT.value / filename
         atomic_write_bytes(path, data)
@@ -100,8 +96,6 @@ class StorageService:
         )
         write_json(path, payload)
         return path
-
-    # --- Reading / serving -------------------------------------------------
 
     def resolve_servable(self, job_id: str, kind: StorageKind, filename: str) -> Path:
         """Validate a client-supplied triple and return the file it names.

@@ -1,10 +1,3 @@
-"""Prompt for turning a user description into a transparent-background subject.
-
-The wording is kept byte-identical to the version validated in
-``scripts/generate_transparent_image.py``; line lengths here are the prompt, not formatting.
-"""
-
-
 def build_generate_image_prompt(user_request: str) -> str:
     return f"""
     Create a high-quality transparent PNG-style image based on the user's request.

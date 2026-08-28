@@ -1,6 +1,3 @@
-"""Prompt for rendering the user's text in the visual style of a reference image."""
-
-
 def build_custom_text_prompt(text: str, style_name: str) -> str:
     return f"""
     Render the given text as lettering artwork, imitating the visual style of the provided

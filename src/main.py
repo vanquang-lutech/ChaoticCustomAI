@@ -59,10 +59,14 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
             ", ".join(missing),
         )
 
+    # Every model actually in use is named here. A setting whose env var never reaches it fails
+    # silently -- the note normaliser just falls back -- so the resolved values are logged.
     logger.info(
-        "%s started | model=%s storage=%s tz=%s",
+        "%s started | image_model=%s note_model=%s normalize_notes=%s storage=%s tz=%s",
         settings.app_name,
         settings.openai_image_model,
+        settings.modified_request_model if settings.normalize_order_notes else "-",
+        settings.normalize_order_notes,
         settings.storage_dir,
         settings.timezone,
     )

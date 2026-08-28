@@ -1,11 +1,7 @@
-"""Thin wrapper over the OpenAI image endpoints.
-
-Everything above this layer deals in ``bytes`` plus a ``TokenUsage``; nothing else imports the
-OpenAI SDK. The SDK already retries transient failures on its own, so no retry loop here.
-"""
-
 import base64
 import logging
+from collections.abc import Sequence
+from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -49,15 +45,35 @@ class OpenAIImageClient:
             raise ImageProviderError(f"Image generation failed: {exc}") from exc
         return self._to_result(response)
 
-    def edit(self, prompt: str, image_path: Path, size: str, quality: str) -> ImageResult:
-        """Transform an existing image -- used for background removal and custom text."""
+    def edit(
+        self,
+        prompt: str,
+        image_paths: Sequence[Path],
+        size: str,
+        quality: str,
+        background: str = "transparent",
+    ) -> ImageResult:
+        """Transform existing images -- background removal, custom text, product customisation.
+
+        More than one path is accepted because a product edit can carry a reference image
+        alongside the mock-up being edited. A single path is still sent on its own rather than
+        as a list of one, so the request stays byte-identical to what the two older features
+        have always sent.
+
+        ``background`` is a parameter rather than a constant because the features disagree
+        about it: the two that produce cutouts want transparency, while editing a product photo
+        must leave the photo's own background alone.
+        """
+        if not image_paths:
+            raise ImageProviderError("An image edit needs at least one input image")
         try:
-            with image_path.open("rb") as handle:
+            with ExitStack() as stack:
+                handles = [stack.enter_context(path.open("rb")) for path in image_paths]
                 response = self._client.images.edit(
                     model=self._model,
-                    image=handle,
+                    image=handles[0] if len(handles) == 1 else handles,
                     prompt=prompt,
-                    background="transparent",
+                    background=background,
                     size=size,
                     quality=quality,
                     output_format="png",

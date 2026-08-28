@@ -13,6 +13,7 @@ class Feature(StrEnum):
     UPLOAD = "upload"
     GENERATE_IMAGE = "generate_image"
     CUSTOM_TEXT = "custom_text"
+    CUSTOM_PRODUCT = "custom_product"
 
 
 class JobStatus(StrEnum):
@@ -48,3 +49,16 @@ class StylePreset(StrEnum):
     PIXEL_BLOCK = "pixel-block"
     STREET_TAG = "street-tag"
     Y2K_NEON = "y2k-neon"
+
+
+class CustomizationMode(StrEnum):
+    """How a customer described the change they want on a product mock-up.
+
+    The storefront lets them do one or the other, never both: fill in the structured fields
+    beside the product, or type a free-form request into the order note. The two arrive as
+    different shapes and are prompted differently, so the mode is part of the request rather
+    than something inferred from which payload happens to be present.
+    """
+
+    FIELDS = "fields"
+    NOTE = "note"

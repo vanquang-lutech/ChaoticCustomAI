@@ -10,7 +10,7 @@ services:
       - --maxmemory-policy
       - noeviction
     ports:
-      - "127.0.0.1:6379:6379"
+      - "127.0.0.1:46379:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -27,7 +27,7 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/0
       TZ: Asia/Ho_Chi_Minh
     ports:
-      - "8000:8000"
+      - "48800:8000"
     volumes:
       - ./storage:/app/storage
       - ./logs:/app/logs

@@ -8,9 +8,11 @@ import cycle.
 TASK_REMOVE_BACKGROUND = "chaotic.remove_background"
 TASK_GENERATE_IMAGE = "chaotic.generate_image"
 TASK_CUSTOM_TEXT = "chaotic.custom_text"
+TASK_CUSTOM_PRODUCT = "chaotic.custom_product"
 
 TASK_MODULES = [
     "src.workers.tasks.remove_background",
     "src.workers.tasks.generate_image",
     "src.workers.tasks.custom_text",
+    "src.workers.tasks.custom_product",
 ]

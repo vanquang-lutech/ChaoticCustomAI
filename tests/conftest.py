@@ -22,9 +22,12 @@ _CACHED_FACTORIES = (
     dependencies.get_usage_service,
     dependencies.get_job_service,
     dependencies.get_image_service,
+    dependencies.get_image_intake,
     dependencies.get_upload_service,
     dependencies.get_generate_service,
     dependencies.get_custom_text_service,
+    dependencies.get_note_normalizer,
+    dependencies.get_custom_product_service,
 )
 
 
@@ -40,6 +43,9 @@ def isolated_settings(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("LOG_DIR", str(tmp_path / "logs"))
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test-not-used")
     monkeypatch.setenv("STYLE_PRESETS_DIR", str(Path("assets/text-styles").resolve()))
+    # Normalising an order note is an OpenAI text call. Off by default so no test can make
+    # one by accident; the tests that cover it turn it on and fake the client.
+    monkeypatch.setenv("NORMALIZE_ORDER_NOTES", "false")
     _clear_caches()
     yield get_settings()
     _clear_caches()
@@ -78,6 +84,7 @@ def no_queue(monkeypatch: pytest.MonkeyPatch) -> list[tuple[str, str]]:
         "src.services.upload_service",
         "src.services.generate_service",
         "src.services.custom_text_service",
+        "src.services.custom_product_service",
     ):
         monkeypatch.setattr(module + ".enqueue", fake_enqueue)
     return captured

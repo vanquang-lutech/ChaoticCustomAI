@@ -1,11 +1,3 @@
-"""Prompt for stripping the background off an uploaded image.
-
-Kept byte-identical to the version validated in ``scripts/remove_background.py``. The wording
-is deliberately heavy on preservation: the model must behave as a matting tool, not as a
-generator, or it quietly redraws the subject.
-"""
-
-
 def build_remove_background_prompt() -> str:
     return """
     Remove ONLY the background from the provided image.

@@ -10,6 +10,7 @@ import pytest
 from src.core.exceptions import QueueUnavailableError
 from src.taskqueue import client as client_module
 from src.taskqueue.config import (
+    TASK_CUSTOM_PRODUCT,
     TASK_CUSTOM_TEXT,
     TASK_GENERATE_IMAGE,
     TASK_MODULES,
@@ -24,7 +25,12 @@ def test_the_worker_bootstrap_registers_every_task():
     app.loader.import_default_modules()
 
     registered = {name for name in app.tasks if name.startswith("chaotic.")}
-    assert registered == {TASK_REMOVE_BACKGROUND, TASK_GENERATE_IMAGE, TASK_CUSTOM_TEXT}
+    assert registered == {
+        TASK_REMOVE_BACKGROUND,
+        TASK_GENERATE_IMAGE,
+        TASK_CUSTOM_TEXT,
+        TASK_CUSTOM_PRODUCT,
+    }
 
 
 def test_every_configured_task_module_exists():

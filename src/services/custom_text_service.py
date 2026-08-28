@@ -31,7 +31,6 @@ class CustomTextService:
         self._images = images
 
     def create(self, request: CustomTextRequest) -> JobAccepted:
-        # Fail now rather than in the worker if the reference image is missing.
         self._images.style_preset_path(request.style_preset)
 
         payload = request.model_dump(mode="json")
